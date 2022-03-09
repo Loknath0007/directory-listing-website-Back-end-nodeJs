@@ -22,12 +22,12 @@ async function run() {
       const database = client.db('listing_siteDB');
       const usersCollection = database.collection('users');
       const postsCollection = database.collection('posts');
-    //   const categoriesCollection = database.collection('categories');
+      const categoriesCollection = database.collection('categories');
       const citiesCollection = database.collection('cities');
       const paymentsCollection = database.collection('payments');
 
 
-    // post (get,post)
+    // User (get,post,update,delete)
 
     app.get('/users', async (req, res) => {
         const cursor = usersCollection.find({});
@@ -81,8 +81,8 @@ async function run() {
 
 
 
-      
-    // post (get,post)
+
+    // post (get,post, ,update,delete)
 
     app.get('/posts', async (req, res) => {
         const cursor = postsCollection.find({});
@@ -135,10 +135,65 @@ async function run() {
       })
 
 
+
+    // category (get,post, ,update,delete)
+
+    app.get('/categories', async (req, res) => {
+        const cursor = categoriesCollection.find({});
+        const categories = await cursor.toArray();
+        res.json(categories);
+
+    })
+
+
+    app.post('/categories',async(req,res)=>{
+        const categories = req.body; 
+         const result = await categoriesCollection.insertOne(categories);
+         res.json(result);
+      
+     })
+
+       //   single data get 
+
+       app.get('/categories/:id', async (req, res) => {
+        const id= req.params.id;
+        const query ={_id: ObjectId(id)};
+        console.log('get id')
+        const result = await categoriesCollection.findOne(query);
+        res.json(result);
+      })
+
+
+     //Update
+
+      app.put('/categories/:id', async (req, res) => {
+        const id = req.params.id;
+        const categories = req.body;
+        const filter = {_id: ObjectId(id)}
+        // const options = { upsert: true };
+        const updateDoc = {
+           $set: categories
+            
+        };
+        const result = await categoriesCollection.updateOne(filter, updateDoc);
+        res.json(result);
+      });
+
+     // delete api 
+  
+     app.delete('/categories/:id',async(req,res)=>{
+        const id= req.params.id;
+        const query ={_id: ObjectId(id)};
+        const result = await categoriesCollection.deleteOne(query);
+        res.json(result);
+      })
+  
+
+
     
     } finally {
       // Ensures that the client will close when you finish/error
-    //   await client.close();
+      // await client.close();
     }
   }
   run().catch(console.dir);

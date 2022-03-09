@@ -16,5 +16,11 @@
   "bugs": {
     "url": "https://github.com/Loknath0007/directory-listing-website-nodeJs/issues"
   },
-  "homepage": "https://github.com/Loknath0007/directory-listing-website-nodeJs#readme"
+  "homepage": "https://github.com/Loknath0007/directory-listing-website-nodeJs#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "mongodb": "^4.4.1"
+  }
 }

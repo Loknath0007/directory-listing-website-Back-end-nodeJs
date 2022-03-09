@@ -20,12 +20,68 @@ async function run() {
     try {
       await client.connect();
       const database = client.db('listing_siteDB');
+      const usersCollection = database.collection('users');
       const postsCollection = database.collection('posts');
     //   const categoriesCollection = database.collection('categories');
       const citiesCollection = database.collection('cities');
       const paymentsCollection = database.collection('payments');
 
 
+    // post (get,post)
+
+    app.get('/users', async (req, res) => {
+        const cursor = usersCollection.find({});
+        const users = await cursor.toArray();
+        res.json(users);
+
+    })
+
+
+    app.post('/users',async(req,res)=>{
+        const users = req.body; 
+         const result = await usersCollection.insertOne(users);
+         res.json(result);
+      
+     })
+
+       //   single data get 
+
+       app.get('/users/:id', async (req, res) => {
+        const id= req.params.id;
+        const query ={_id: ObjectId(id)};
+        console.log('get id')
+        const result = await usersCollection.findOne(query);
+        res.json(result);
+      })
+
+
+     //Update
+
+      app.put('/users/:id', async (req, res) => {
+        const id = req.params.id;
+        const posts = req.body;
+        const filter = {_id: ObjectId(id)}
+        // const options = { upsert: true };
+        const updateDoc = {
+           $set: posts
+            
+        };
+        const result = await usersCollection.updateOne(filter, updateDoc);
+        res.json(result);
+      });
+
+     // delete api 
+  
+     app.delete('/users/:id',async(req,res)=>{
+        const id= req.params.id;
+        const query ={_id: ObjectId(id)};
+        const result = await usersCollection.deleteOne(query);
+        res.json(result);
+      })
+
+
+
+      
     // post (get,post)
 
     app.get('/posts', async (req, res) => {

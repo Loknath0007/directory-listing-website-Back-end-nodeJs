@@ -1,11 +1,11 @@
 const express=require('express')
 const router =express.Router()
-
+const checkLogin = require('../middlewares/checkLogin')
 const {getPost,createPost,updatePost,getSinglePost,deletePost}= require('../controllers/postController')
 
 router.route('/')
-    .get(getPost)
-    .post(createPost)
+    .get(checkLogin,getPost)
+    .post(checkLogin,createPost)
 
 router.route('/:id')
 .get(getSinglePost)

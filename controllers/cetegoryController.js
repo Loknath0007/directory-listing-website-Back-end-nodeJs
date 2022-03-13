@@ -49,7 +49,9 @@ const getSingleData=async(req,res)=>{
    
     const filter = {_id: ObjectId(id)}
     const result = await Category.findOne(filter).exec()
+
      res.json(result);
+     console.log(result.subCategory._id)
 
 }
 const update=async(req,res)=>{
@@ -85,10 +87,13 @@ const deleteData=async(req,res)=>{
 }
 
 
+
+
 module.exports={
     getData,
     create,
     getSingleData,
     update,
-    deleteData
+    deleteData,
+    
 }

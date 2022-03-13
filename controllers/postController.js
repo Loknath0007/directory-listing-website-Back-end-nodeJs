@@ -1,12 +1,13 @@
 const express =require('express')
 const Post = require('../model/Post')
+const User = require('../model/User')
 const ObjectId = require('mongodb').ObjectId
 
 
 const getPost= async (req,res)=>{
 
     
-    const cursor = await Post.find();
+    const cursor = await Post.find().populate("user", "username");
     if(!cursor) return res.status(201).json({'message':'No post yet'})
     res.status(201).json(cursor)
      
@@ -29,7 +30,19 @@ const createPost= async (req,res)=>{
     //     }
     // })
     try {
-        const result = await Post.create(req.body)
+        const result = await Post.create({
+            ...req.body,
+            user: req.userId
+        })
+        const updateUser= await User.updateOne({
+            _id:req.userId
+        },
+        {
+            $push: {
+                posts: result._id
+            }
+        }
+        )
         res.status(201).json(result)
         
     } catch (error) {

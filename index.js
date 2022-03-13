@@ -24,7 +24,7 @@ app.use('/posts',postRouter)
 const categoryRouter=require('./routes/categoryRouter')
 app.use('/categories',categoryRouter)
 const userRouter=require('./routes/userRoute');
-const res = require('express/lib/response');
+
 app.use('/users',userRouter);
 
 

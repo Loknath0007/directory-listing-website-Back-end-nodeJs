@@ -15,7 +15,11 @@ const postSchema = new Schema({
         title: String,
         
     }],
-    description:String
+    description:String,
+    user:{
+        type: mongoose.Types.ObjectId,
+        ref: "User",
+    }
 })
 
 

@@ -1,23 +1,52 @@
-const express=require('express')
-const router =express.Router()
+const express = require('express')
+const router = express.Router()
 
-const {getData,create,update,getSingleData,deleteData,
-    
+const { getData, create, update, getSingleData, deleteData,
+    getSubData,
+    getSubSingleData,
+    deleteAll,
+    createSubCat,
+    updateSubCat,
+    deleteSubCat
 
-}= require('../controllers/cetegoryController')
+} = require('../controllers/cetegoryController')
 
 router.route('/')
     .get(getData)
     .post(create)
 
 
-  
+
 
 router.route('/:id')
-.get(getSingleData)
-.put(update)
-.delete(deleteData)
+    .get(getSingleData)
+    .put(update)
+    .delete(deleteData)
 
 
 
-   module.exports=router 
+
+
+
+
+router.route('/:id/subCategory')
+    .get(getSubData)
+router.route('/update/:cId/:sId')
+    .put(updateSubCat)
+router.route('/delete/:cId/:sId')
+    .put(deleteSubCat)
+
+
+    //sub category 
+router.route('/subCategory/:id')
+    // .get(getSubSingleData)
+    .put(createSubCat)
+router.route('/:cId/subCategory/:sId')
+    .get(getSubSingleData)
+    
+
+
+
+router.delete('/', deleteAll)
+
+module.exports = router 

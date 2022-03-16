@@ -19,6 +19,8 @@ const con= mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: tr
 
 
 //Router
+const authRouter=require('./routes/authRouter')
+app.use('/',authRouter)
 const postRouter=require('./routes/postRouter')
 app.use('/posts',postRouter)
 const categoryRouter=require('./routes/categoryRouter')

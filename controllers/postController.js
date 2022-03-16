@@ -34,6 +34,7 @@ const createPost= async (req,res)=>{
             ...req.body,
             user: req.userId
         })
+        // console.log(result.timestamps.createdAt)
         const updateUser= await User.updateOne({
             _id:req.userId
         },
@@ -97,11 +98,17 @@ const deletePost=async(req,res)=>{
 
 }
 
+const deleteAll =async(req,res)=>{
+    const result=  await Post.deleteMany()
+      res.status(200).json(result)
+      }
+
 
 module.exports={
     getPost,
     createPost,
     getSinglePost,
     updatePost,
-    deletePost
+    deletePost,
+    deleteAll
 }

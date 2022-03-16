@@ -11,7 +11,7 @@ const jwt = require('jsonwebtoken')
 const getData= async (req,res)=>{
 
     
-    const cursor = await User.find();
+    const cursor = await User.find().populate('posts');
     if(!cursor) return res.status(200).json({'message':'No post yet'})
     res.status(200).json(cursor)
      
@@ -81,51 +81,51 @@ const deleteData=async(req,res)=>{
 }
 
 
-const userLogin=async(req,res)=>{
+// const userLogin=async(req,res)=>{
 
 
-    try {
+//     try {
 
-        const user = await User.find({username: req.body.username})
-        if(user){
+//         const user = await User.find({username: req.body.username})
+//         if(user){
     
-            const isValid = await bcrypt.compare(req.body.password,user[0].password)
-            if(isValid){
-                //generate token
-                const token =jwt.sign({
-                    username:user[0].username,
-                    userId:user[0]._id,
-                },process.env.JWT_SECRET,{
-                    expiresIn: '1h'
-                })
+//             const isValid = await bcrypt.compare(req.body.password,user[0].password)
+//             if(isValid){
+//                 //generate token
+//                 const token =jwt.sign({
+//                     username:user[0].username,
+//                     userId:user[0]._id,
+//                 },process.env.JWT_SECRET,{
+//                     expiresIn: '24h'
+//                 })
     
-                res.status(200).json({
-                    'access_token': token,
-                    'message': 'Login successful'
-                })
+//                 res.status(200).json({
+//                     'access_token': token,
+//                     'message': 'Login successful'
+//                 })
     
-            }
-            else{
-                res.status(401).json({
-                    'message':'Authentication Failed'
-                })
-            }
-        }
-        else{
-            res.status(401).json({
-                'message':'Authentication Failed'
-            })
-        }
+//             }
+//             else{
+//                 res.status(401).json({
+//                     'message':'Authentication Failed'
+//                 })
+//             }
+//         }
+//         else{
+//             res.status(401).json({
+//                 'message':'Authentication Failed'
+//             })
+//         }
         
-    } catch (error) {
+//     } catch (error) {
 
-        res.status(401).json({
-            'message':'Authentication Failed'
-        })
+//         res.status(401).json({
+//             'message':'Authentication Failed'
+//         })
         
-    }
+//     }
  
-}
+// }
 
 
 module.exports={
@@ -134,5 +134,5 @@ module.exports={
     getSingleData,
     update,
     deleteData,
-    userLogin
+    
 }

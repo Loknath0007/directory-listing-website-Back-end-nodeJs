@@ -23,6 +23,6 @@ router.route('/:id')
 .put(update)
 .delete(deleteData)
 
-router.post('/login',userLogin)
+
 
    module.exports=router 

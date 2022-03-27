@@ -25,6 +25,8 @@ const postRouter=require('./routes/postRouter')
 app.use('/posts',postRouter)
 const categoryRouter=require('./routes/categoryRouter')
 app.use('/categories',categoryRouter)
+const locationRouter=require('./routes/locationRouter')
+app.use('/location',locationRouter)
 const userRouter=require('./routes/userRoute');
 
 app.use('/users',userRouter);

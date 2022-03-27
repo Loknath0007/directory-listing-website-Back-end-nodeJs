@@ -1,6 +1,6 @@
 const express =require('express');
 const Category = require('../model/Category');
-const Subcategory = require('../model/Subcategory');
+// const Subcategory = require('../model/Subcategory');
 const ObjectId = require('mongodb').ObjectId
 
 
@@ -244,28 +244,29 @@ const updateSubCat=async (req,res)=>{
 
 
 }
-//working 
+
 const deleteSubCat=async (req,res)=>{
    
 
     try {
       const { cId, sId } = req.params;
 
-    //   const category = await Category.findById(cId);
-    //   if (!category) return res.status(400).send('Invalid Post');
+   
 
-    //   const subCat= category.subCategory.id(sId)
-    // subCat.pull(req.body)
-    // const result = await category.save()
 
-    const category = await Category.updateOne({_id:cId},{
-      $pullAll:{
-        subCategoryid:[
-          sId
-      ]
+    const category = await Category.updateOne({
+      _id: cId
+    }, {
+      $pull: {
+        subCategory: {
+          _id: sId
+        }
       }
     });
-      res.status(200).json(category);
+    res.status(200).json(category);
+
+    
+
   } catch (error) {
       res.status(400).send(error.message);
   }

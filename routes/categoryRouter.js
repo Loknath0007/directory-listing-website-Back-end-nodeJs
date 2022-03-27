@@ -41,7 +41,7 @@ router.route('/delete/:cId/:sId')
 router.route('/subCategory/:id')
     // .get(getSubSingleData)
     .put(createSubCat)
-router.route('/:cId/subCategory/:sId')
+router.route('/:cId/:sId')
     .get(getSubSingleData)
     
 

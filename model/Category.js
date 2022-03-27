@@ -4,6 +4,7 @@ const {Schema}=mongoose
 const subCategorySchema = new Schema({
     name:{
         type: String,
+        // unique: true
         
     }
   
@@ -14,6 +15,7 @@ const subCategorySchema = new Schema({
 const categorySchema = new Schema({
     name:{
         type: String,
+        // unique: true
         
     },
     subCategory:[subCategorySchema],

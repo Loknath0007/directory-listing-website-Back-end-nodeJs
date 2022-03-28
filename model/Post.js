@@ -4,16 +4,30 @@ const {Schema}=mongoose
 const postSchema = new Schema({
     title:{
         type: String,
+        required: true
         
+    },
+    price:{
+        type: Number,
+        required: true
+    },
+    condition:{
+        type: String,
+        required: true
     },
     category:[{
         type: String,
+        required: true
         
         
     }],
     subCategory:[{
         type: String,
+    
         
+    }],
+    fetures:[{
+        type: String
     }],
     location:String,
     description:String,

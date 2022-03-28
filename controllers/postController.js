@@ -48,6 +48,9 @@ const createPost= async (req,res)=>{
         
     } catch (error) {
         console.log(error);
+        res.send({
+            "message":"There is an error"
+        })
     }
 
 }

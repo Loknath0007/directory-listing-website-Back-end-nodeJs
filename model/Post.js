@@ -26,7 +26,7 @@ const postSchema = new Schema({
     
         
     }],
-    fetures:[{
+    features:[{
         type: String
     }],
     location:String,

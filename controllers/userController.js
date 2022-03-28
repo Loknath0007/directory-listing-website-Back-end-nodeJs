@@ -17,6 +17,8 @@ const getData= async (req,res)=>{
      
 }
 
+
+// user creation or signup 
 const create= async (req,res)=>{
 
         const hashPass= await bcrypt.hash(req.body.password,10)

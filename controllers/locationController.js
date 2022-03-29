@@ -289,7 +289,7 @@ const createCity= async (req,res)=>{
         res.status(400).send(error.message);
     }
 }
-const deleteCity= async (req,res)=>{
+const updateCity= async (req,res)=>{
 
  
    
@@ -320,6 +320,23 @@ const deleteCity= async (req,res)=>{
         res.status(400).send(error.message);
     }
 }
+
+const deleteCity= async (req,res)=>{
+
+ 
+   
+  try {
+      const { lId, sId,cId } = req.params;
+      console.log(cId)
+
+      const result = await Location.find({ id:cId }).remove().exec()
+       
+      res.status(200).json(result);
+  } catch (error) {
+      res.status(400).send(error.message);
+  }
+}
+
 
 
 

@@ -46,11 +46,12 @@ router.route('/:id/state')
 router.route('/state/update/:lId/:sId')
     .put(updateState)
 router.route('/state/delete/:lId/:sId')
-    .put(deleteState)
+    .delete(deleteState)
 router.route('/state/:id')
-    .put(createState)
+    .post(createState)
 router.route('/state/:sId')
     .get(getStateSingleData)
+
 
 
 
@@ -65,7 +66,7 @@ router.route('/city/:sId')
 // router.route('/state/update/:lId/:sId')
 //     .put(updateState)
 router.route('/city/delete/:cId')
-    .put(deleteCity)
+    .delete(deleteCity)
 router.route('/city/:id')
     .put(createState)
 // router.route('/:lId/:sId')

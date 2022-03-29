@@ -4,6 +4,8 @@ const cors = require('cors');
 require('dotenv').config();
 const ObjectId = require('mongodb').ObjectId
 const bodyParser = require("body-parser");
+const session = require('express-session');
+// const sessoin = require('e')
 
 const { MongoClient } = require('mongodb');
 const port = process.env.PORT || 5000;
@@ -39,7 +41,26 @@ var storage = multer.diskStorage({
   }
 });
 
-var upload = multer({ storage: storage });
+const fileFilter = (req,file,cb)=>{
+  // var ext = path.extname(file.originalname);
+  const ext = path.extname(file.originalname);
+  if(ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
+    return cb(new Error('Only images are allowed'))
+}
+
+}
+
+// const fileSize = parseInt(req.headers['content-length']);
+//       if (fileSize > 1048576) {
+//         callback(new Error('Please upload file less then 10Mb'));
+//     }
+
+
+var upload = multer({ 
+  storage: storage ,
+  limits:{ fileSize: 200 * 1024 * 1024} ,
+    // fileFilter:fileFilter
+  });
 
 // const {upload} = require('./middlewares/products/fileUplaod')
 
@@ -56,16 +77,17 @@ app.use(bodyParser.urlencoded(
 ))
  
     
-
-app.post('/post/imageupload/:id', upload.single('image'), (req, res, next) => {
+//multiple file problem 
+app.post('/post/imageupload/:id', upload.array('images',6), (req, res, next) => {
 
 	var obj = {
     postId: req.params.id ,
 		name: req.body.name,
 		desc: req.body.desc,
 		img: {
-			data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
-			contentType: 'image/jpg'
+      data: req.files.map(file=>fs.readFileSync(path.join(__dirname+ '/uploads/' + file))),
+			// data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.files.map(filename=>filename=filename))),
+			contentType: 'image/*'
 		}
 	}
 	imageModel.create(obj, (err, item) => {
@@ -77,7 +99,7 @@ app.post('/post/imageupload/:id', upload.single('image'), (req, res, next) => {
 			res.send(item);
 		}
 	});
-  // res.send('upload ok')
+  res.send('upload ok')
 });
 
 

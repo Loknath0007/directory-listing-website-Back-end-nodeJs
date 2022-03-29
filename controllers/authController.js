@@ -22,10 +22,13 @@ const userLogin=async(req,res)=>{
                 },process.env.JWT_SECRET,{
                     expiresIn: '24h'
                 })
+
+                // localStorage.setItem('username'=req.body.username)
     
                 res.status(200).json({
                     'access_token': token,
                     'message': 'Login successful'
+                    
                 })
     
             }
@@ -49,6 +52,20 @@ const userLogin=async(req,res)=>{
         
     }
  
+}
+
+const userRoleChecking = async (req,res)=>{
+    try{
+        const user = await User.find({username: req.body.username})
+        if(user){
+            user.filter({
+                
+            })
+        }
+    }
+    catch{
+
+    }
 }
 
 

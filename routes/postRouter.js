@@ -6,7 +6,7 @@ deleteAll
 }= require('../controllers/postController')
 
 router.route('/')
-    .get(checkLogin,getPost)
+    .get(getPost)
     .post(checkLogin,createPost)
 
 router.route('/:id')

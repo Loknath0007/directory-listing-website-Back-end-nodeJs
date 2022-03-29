@@ -3,6 +3,7 @@ const app = express()
 const cors = require('cors');
 require('dotenv').config();
 const ObjectId = require('mongodb').ObjectId
+const bodyParser = require("body-parser");
 
 const { MongoClient } = require('mongodb');
 const port = process.env.PORT || 5000;
@@ -11,12 +12,78 @@ const mongoose = require('mongoose')
 
 app.use(cors());
 app.use(express.json());
+app.use(bodyParser.urlencoded(
+      { extended:true }
+))
 
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.daqqt.mongodb.net/listing_siteDB?retryWrites=true&w=majority`;
 // const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 const con= mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }).then(()=>console.log('connect'))
+
+
+
+
+// initial coding for uploading photo 
+// set storage 
+
+const multer = require("multer");
+
+var storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+      cb(null, 'uploads')
+  },
+  filename: (req, file, cb) => {
+      cb(null, file.fieldname + '-' + Date.now())
+  }
+});
+
+var upload = multer({ storage: storage });
+
+// const {upload} = require('./middlewares/products/fileUplaod')
+
+
+const path = require('path');
+const fs = require("fs");
+
+// const mongoose = require("mongoose");
+var imageModel = require('./model/Images');
+ 
+ 
+app.use(bodyParser.urlencoded(
+      { extended:true }
+))
+ 
+    
+
+app.post('/post/imageupload/:id', upload.single('image'), (req, res, next) => {
+
+	var obj = {
+    postId: req.params.id ,
+		name: req.body.name,
+		desc: req.body.desc,
+		img: {
+			data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
+			contentType: 'image/jpg'
+		}
+	}
+	imageModel.create(obj, (err, item) => {
+		if (err) {
+			console.log(err);
+		}
+		else {
+			// item.save();
+			res.send(item);
+		}
+	});
+  // res.send('upload ok')
+});
+
+
+// end of file uploadation 
+
+
 
 
 //Router
@@ -31,6 +98,9 @@ app.use('/location',locationRouter)
 const userRouter=require('./routes/userRoute');
 
 app.use('/users',userRouter);
+const fileUploadRouter = require('./routes/fileUploadRoute');
+app.use('/post',fileUploadRouter)
+// app.use('/',fileUploadRouter)
 
 
 

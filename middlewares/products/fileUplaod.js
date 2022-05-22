@@ -2,19 +2,19 @@
  * Function for avater upload for product images
  */
 
- const multer = require("multer");
+const multer = require('multer');
 
- var storage = multer.diskStorage({
-   destination: (req, file, cb) => {
-       cb(null, '../../uploads')
-   },
-   filename: (req, file, cb) => {
-       cb(null, file.fieldname + '-' + Date.now())
-   }
- });
- 
- var upload = multer({ storage: storage });
+var storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, '../../uploads');
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.fieldname + '-' + Date.now());
+  },
+});
 
- module.exports = {
-     upload
- }
+var upload = multer({ storage: storage });
+
+module.exports = {
+  upload,
+};

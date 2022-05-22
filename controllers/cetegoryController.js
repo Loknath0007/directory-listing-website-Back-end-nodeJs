@@ -1,59 +1,25 @@
-const express = require("express");
-const Category = require("../model/Category");
+const asyncHandler = require('../middlewares/async');
+const Category = require('../model/Category');
 // const Subcategory = require('../model/Subcategory');
-const ObjectId = require("mongodb").ObjectId;
+const ObjectId = require('mongodb').ObjectId;
 
-const getData = async (req, res) => {
-  const cursor = await Category.find();
-  if (!cursor) return res.status(201).json({ message: "No post yet" });
-  res.status(201).json(cursor);
-};
+// @Get Categories   GET /api/categories
+const getCategories = asyncHandler(async (req, res, next) => {
+  const categories = await Category.find();
+
+  res.status(200).json({
+    success: true,
+    count: categories.length,
+    data: categories,
+  });
+});
 
 const create = async (req, res) => {
-  // if(!req?.body) return res.status(400).json({'message':'Noting to save '})
-
-  // const newPost=new Post(req.body)
-  // await newPost.save((err)=>{
-  //     if(!err) {
-  //      res.status(201).json(newPost)
-  //     }
-  //     else{
-  //         res.status(400).json({
-  //             'message':"error"
-  //         })
-  //     }
-  // })
+  
   try {
     const result = await Category.create(req.body);
     res.status(201).json(result);
 
-    // // const result = await Category.create(req.body)
-    // // const subCategory=
-    // const {name ,description, SubCategory} =req.body
-
-    // const data = await subCategory.map(d=>{
-    //   return{
-    //     name:req.body.subCategory,
-    //     ...d
-    //   }
-    // })
-
-    // const newCat=new Category({name:name, description:description})
-    // // const newSubCat=new Subcategory({name:SubCategory})
-    // const newSubCat=await Subcategory.insertMany(data)
-    // // const result = await newSubCat.save()
-    // newCat.subCategory.push([ObjectId(newSubCat._id)])
-    // const r = await newCat.save()
-    // res.status(200).json({
-    //     // result,
-    //     newSubCat,
-    //     r,
-    //     'message': 'seccess'
-    // })
-    // // res.status(201).json({
-    // //     'r':r,
-    // //     'result':result
-    // // })
   } catch (error) {
     console.log(error);
   }
@@ -74,7 +40,7 @@ const getSingleData = async (req, res) => {
 
 const update = async (req, res) => {
   const id = req.params.id;
-  if (!id) return res.status(400).json({ message: "ID is required " });
+  if (!id) return res.status(400).json({ message: 'ID is required ' });
 
   const posts = req.body;
   const filter = { _id: ObjectId(id) };
@@ -123,7 +89,7 @@ const getSubSingleData = async (req, res) => {
   // const category = await Category.findOne({ _id: cId},{ "subCategory._id": sId})
   // const category = await Category.findOne({ _id: cId},"subCategory")
   const category = await Category.find(
-    { "subCategory._id": req.params.sId },
+    { 'subCategory._id': req.params.sId },
     { name: 1, subCategory: { $elemMatch: { _id: req.params.sId } } }
   );
 
@@ -155,10 +121,10 @@ const createSubCat = async (req, res) => {
   Category.findById(req.params.id, function (err, result) {
     if (!err) {
       if (!result) {
-        res.sendStatus(404).send("User was not found").end();
+        res.sendStatus(404).send('User was not found').end();
       } else {
         result.subCategory.push(req.body);
-        result.markModified("subcategorys");
+        result.markModified('subcategorys');
         result.save(function (saveerr, saveresult) {
           if (!saveerr) {
             res.status(200).send(saveresult);
@@ -178,7 +144,7 @@ const updateSubCat = async (req, res) => {
     const { cId, sId } = req.params;
 
     const category = await Category.findById(cId);
-    if (!category) return res.status(400).send("Invalid Post");
+    if (!category) return res.status(400).send('Invalid Post');
 
     const subCat = category.subCategory.id(sId);
     subCat.set(req.body);
@@ -218,7 +184,7 @@ const deleteAll = async (req, res) => {
 };
 
 module.exports = {
-  getData,
+  getCategories,
   create,
   getSingleData,
   update,

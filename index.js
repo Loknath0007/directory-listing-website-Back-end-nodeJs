@@ -10,7 +10,6 @@ const connectDB = require('./config/db');
 // const sessoin = require('e')
 
 const PORT = process.env.PORT || 5000;
-// const mongoose = require('mongoose')
 
 app.use(cors());
 app.use(express.json());
@@ -84,8 +83,6 @@ app.post(
     res.send("upload ok");
   }
 );
-
-// end of file uploadation
 
 //Router
 const authRouter = require("./routes/authRouter");

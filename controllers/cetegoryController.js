@@ -58,9 +58,20 @@ const deleteCategory = asyncHandler(async (req, res, next) => {
   });
 });
 
+// @Dlete All Categories   DELETE /api/categories
+const deleteAllCategories = asyncHandler(async (req, res, next) => {
+  await Category.deleteMany();
+
+  res.status(200).json({
+    success: true,
+    isDeleted: true,
+  });
+});
+
 module.exports = {
   getCategories,
   createCategory,
   updateCategory,
   deleteCategory,
+  deleteAllCategories,
 };

@@ -9,13 +9,7 @@ const categorySchema = new Schema(
       trim: true,
       require: true,
     },
-    subCategories: [
-      {
-        type: String,
-        unique: true,
-        trim: true,
-      },
-    ],
+    subCategories: [String],
   },
   { timestamps: true }
 );

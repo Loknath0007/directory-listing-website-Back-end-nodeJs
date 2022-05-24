@@ -86,11 +86,11 @@ app.post(
 
 //Router
 const authRouter = require("./routes/authRouter");
-app.use("/api", authRouter);
+app.use("/api/auth", authRouter);
 const postRouter = require("./routes/postRouter");
 app.use("/posts", postRouter);
 const categoryRouter = require("./routes/categoryRouter");
-app.use("/categories", categoryRouter);
+app.use("/api/categories", categoryRouter);
 const locationRouter = require("./routes/locationRouter");
 app.use("/location", locationRouter);
 const userRouter = require("./routes/userRoute");
@@ -118,13 +118,6 @@ app.use((err, req, res, next) => {
 
 const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-});
-
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (err) => {
-  console.log(`Error: ${err.message}`);
-  // Close server & exit process
-  server.close(() => process.exit(1));
 });
 
 // Handle unhandled promise rejections

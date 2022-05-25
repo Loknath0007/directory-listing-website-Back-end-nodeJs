@@ -1,65 +1,63 @@
-const express = require("express");
-const User = require("../model/User");
-const ObjectId = require("mongodb").ObjectId;
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const asyncHandler = require("../middlewares/async");
+const sendToken = require("../utils/jwtToken");
+const ErrorResponse = require("../utils/errorResponse");
+const User = require("../model/User");
 
-// user registration
-const userRegister = asyncHandler(async (req, res) => {
-  const newUser = await User.create(req.body);
+// Register user   =>   POST /api/v1/register
+exports.registerUser = asyncHandler(async (req, res, next) => {
+  const { name, email, password } = req.body;
 
-  const authToken = await jwt.sign({ id: newUser.id }, process.env.JWT_SECRET);
+  // Check if user already exists
+  const user = await User.findOne({ email });
+  if (user) {
+    return next(new ErrorResponse("User already exists", 400));
+  }
+
+  const newUser = await User.create({
+    name,
+    email,
+    password,
+  });
+
+  sendToken(newUser, 200, res);
+});
+
+// Login user   =>   POST /api/auth/login
+exports.loginUser = asyncHandler(async (req, res, next) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return next(new ErrorResponse("Please provide email and password", 400));
+  }
+
+  const user = await User.findOne({ email }).select("+password");
+
+  if (!user || !(await user.correctPassword(password))) {
+    return next(new ErrorResponse("Incorrect email or password", 401));
+  }
+
+  sendToken(user, 200, res);
+});
+
+// Get current user details   =>   GET /api/auth/me
+exports.getUserProfile = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id).select("-password");
+
   res.status(200).json({
     success: true,
-    authToken,
-    user: newUser,
+    user,
   });
 });
 
-// user login
-const userLogin = asyncHandler(async (req, res, next) => {
-  const user = await User.find({ email: req.body.email });
-  console.log(user);
-  if (!user) {
-    return next(new ErrorResponse(`Invalid Email or Password`, 404));
-  }
-
-  const isValid = await bcrypt.compare(req.body.password, user[0].password);
-
-  if (!isValid) {
-    return next(new ErrorResponse(`Invalid Email or Password`, 404));
-  }
-
-  //generate token
-  const authToken = jwt.sign(
-    {
-      id: user[0]._id,
-    },
-    process.env.JWT_SECRET,
-    {
-      expiresIn: "24h",
-    }
-  );
-
-  // localStorage.setItem('name'=req.body.username)
+// Logout user   =>   GET /api/v1/logout
+exports.logoutUser = asyncHandler(async (req, res, next) => {
+  res.cookie("token", null, {
+    expires: new Date(Date.now()),
+    httpOnly: true,
+  });
 
   res.status(200).json({
-    access_token: authToken,
-    message: "Login successful",
+    success: true,
+    message: "Successfully logged out",
   });
 });
-
-const userRoleChecking = async (req, res) => {
-  try {
-    const user = await User.find({ name: req.body.name });
-    if (user) {
-      user.filter({});
-    }
-  } catch {}
-};
-
-module.exports = {
-  userLogin,
-  userRegister,
-};

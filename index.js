@@ -1,19 +1,20 @@
 const express = require("express");
 const app = express();
-const cors = require('cors');
-require('dotenv').config();
-const mongoose = require("mongoose");
-const morgan = require('morgan');
-const session = require('express-session');
-const errorHandler = require('./middlewares/error');
-const connectDB = require('./config/db');
+const cors = require("cors");
+require("dotenv").config();
+const cookieParser = require("cookie-parser");
+const morgan = require("morgan");
+const session = require("express-session");
+const errorHandler = require("./middlewares/error");
+const connectDB = require("./config/db");
 // const sessoin = require('e')
 
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
-app.use(morgan('dev'));
+app.use(cookieParser());
+app.use(morgan("dev"));
 
 // Database
 connectDB();
@@ -89,20 +90,24 @@ const authRouter = require("./routes/authRouter");
 app.use("/api/auth", authRouter);
 const postRouter = require("./routes/postRouter");
 app.use("/posts", postRouter);
+
+// Category Routes
 const categoryRouter = require("./routes/categoryRouter");
 app.use("/api/categories", categoryRouter);
-const locationRouter = require("./routes/locationRouter");
-app.use("/location", locationRouter);
-const userRouter = require("./routes/userRoute");
 
+// Location Routes
+const locationRouter = require("./routes/locationRouter");
+app.use("/api/location", locationRouter);
+
+const userRouter = require("./routes/userRoute");
 app.use("/users", userRouter);
+
 const fileUploadRouter = require("./routes/fileUploadRoute");
 app.use("/post", fileUploadRouter);
+// app.use('/',fileUploadRouter)
 
-
-app.get("/", (req, res) => {
-  res.send("server Running");
-});
+// Error Handler
+app.use(errorHandler);
 
 app.use((err, req, res, next) => {
   if (res.headersSent) {
@@ -121,7 +126,7 @@ const server = app.listen(PORT, () => {
 });
 
 // Handle unhandled promise rejections
-process.on('unhandledRejection', (err) => {
+process.on("unhandledRejection", (err) => {
   console.log(`Error: ${err.message}`);
   // Close server & exit process
   server.close(() => process.exit(1));

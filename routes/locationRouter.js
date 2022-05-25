@@ -1,47 +1,19 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
 const {
-  getData,
-  create,
-  update,
-  deleteAll,
-  getSingleData,
-  deleteData,
+  getLocations,
+  createLocation,
+  updateLocation,
+  deleteLocation,
+  deleteAllLocation,
+} = require("../controllers/locationController");
 
-  //State
-  getStateData,
-  getStateSingleData,
-
-  createState,
-  updateState,
-  deleteState,
-
-  createCity,
-  deleteCity,
-  getCityData,
-} = require('../controllers/locationController');
-
-router.route('/').get(getData).post(create).delete(deleteAll);
-
-router.route('/:id').get(getSingleData).put(update).delete(deleteData);
-
-//State
-router.route('/:id/state').get(getStateData);
-router.route('/state/update/:lId/:sId').put(updateState);
-router.route('/state/delete/:lId/:sId').delete(deleteState);
-router.route('/state/:id').post(createState);
-router.route('/state/:sId').get(getStateSingleData);
-
-//City
-router.route('/city/:sId').get(getCityData);
-router.route('/:lId/:sId/city').put(createCity);
-
-// router.route('/state/update/:lId/:sId')
-//     .put(updateState)
-router.route('/city/delete/:cId').delete(deleteCity);
-router.route('/city/:id').put(createState);
-// router.route('/:lId/:sId')
-//     .get(getStateSingleData)
+router
+  .route("/")
+  .get(getLocations)
+  .post(createLocation)
+  .delete(deleteAllLocation);
+router.route("/").put(updateLocation).delete(deleteLocation);
 
 module.exports = router;

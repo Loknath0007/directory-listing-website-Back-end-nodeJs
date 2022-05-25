@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 require('dotenv').config();
+const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const session = require('express-session');
 const errorHandler = require('./middlewares/error');
@@ -12,6 +13,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 app.use(morgan('dev'));
 
 // Database
@@ -86,18 +88,21 @@ app.post(
 
 //Router
 const authRouter = require('./routes/authRouter');
-app.use('/', authRouter);
+app.use('/api/auth', authRouter);
 const postRouter = require('./routes/postRouter');
 app.use('/posts', postRouter);
 
+// Category Routes
 const categoryRouter = require('./routes/categoryRouter');
 app.use('/api/categories', categoryRouter);
 
+// Location Routes
 const locationRouter = require('./routes/locationRouter');
-app.use('/location', locationRouter);
-const userRouter = require('./routes/userRoute');
+app.use('/api/location', locationRouter);
 
+const userRouter = require('./routes/userRoute');
 app.use('/users', userRouter);
+
 const fileUploadRouter = require('./routes/fileUploadRoute');
 app.use('/post', fileUploadRouter);
 // app.use('/',fileUploadRouter)

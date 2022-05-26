@@ -4,7 +4,7 @@
   "description": "\"# directory-listing-website-nodeJs\"",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "nodemon index.js",
     "start-dev": "nodemon index.js"
   },
   "repository": {

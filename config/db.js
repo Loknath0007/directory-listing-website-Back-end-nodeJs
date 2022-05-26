@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const connectDB = async () => {
   await mongoose.connect(process.env.MONGO_LOCAL_URI, {
@@ -6,7 +6,7 @@ const connectDB = async () => {
     useUnifiedTopology: true,
     autoIndex: true,
   });
-  console.log('MongoDB Connected...');
+  console.log("MongoDB Connected...");
 };
 
 module.exports = connectDB;

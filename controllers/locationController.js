@@ -1,5 +1,6 @@
 const asyncHandler = require('../middlewares/async');
 const Location = require('../model/Location');
+const ErrorResponse = require('../utils/errorResponse');
 
 // @Get Locations   GET /api/locations
 const getLocations = asyncHandler(async (req, res, next) => {

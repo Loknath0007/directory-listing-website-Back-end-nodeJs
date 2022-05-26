@@ -22,23 +22,12 @@ const createLocation = asyncHandler(async (req, res) => {
   });
 });
 
-// @Update Locations   PUT /api/location?locationId=11111&state=dhaka
+// @Update Locations   PUT /api/location/:id
 const updateLocation = asyncHandler(async (req, res, next) => {
-  const { locationId, state } = req.query;
-
-  if (!locationId || !state) {
-    return next(new ErrorResponse(`Please provide locationId and state`, 400));
-  }
-
-  // const location = await Location.findByIdAndUpdate(
-  //   locationId,
-  //   { $set: { state } },
-  //   { new: true, runValidators: true }
-  // );
-
-  const location = await Location.findById(locationId);
-
-  const stateData = location.state.find((item) => item.name === state);
+  const location = await Location.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
 
   if (!location) {
     return next(new ErrorResponse(`Location not found`, 404));

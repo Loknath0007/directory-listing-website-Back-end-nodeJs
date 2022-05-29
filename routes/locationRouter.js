@@ -14,6 +14,6 @@ router
   .get(getLocations)
   .post(createLocation)
   .delete(deleteAllLocation);
-router.route("/").put(updateLocation).delete(deleteLocation);
+router.route("/:id").put(updateLocation).delete(deleteLocation);
 
 module.exports = router;

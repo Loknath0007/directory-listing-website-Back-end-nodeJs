@@ -87,7 +87,7 @@ app.post(
 
 //Router
 const authRouter = require("./routes/authRouter");
-app.use("/api/auth", authRouter);
+app.use("/api", authRouter);
 const postRouter = require("./routes/postRouter");
 app.use("/posts", postRouter);
 

@@ -29,13 +29,13 @@ var fileStorage = multer.diskStorage({
     cb(null, file.fieldname + "-" + Date.now());
   },
 });
-// const fileFilter = (req, file, cb) => {
-//   // var ext = path.extname(file.originalname);
-//   const ext = path.extname(file.originalname);
-//   if (ext !== ".png" && ext !== ".jpg" && ext !== ".gif" && ext !== ".jpeg") {
-//     return cb(new Error("Only images are allowed"));
-//   }
-// };
+const fileFilter = (req, file, cb) => {
+  // var ext = path.extname(file.originalname);
+  const ext = path.extname(file.originalname);
+  if (ext !== ".png" && ext !== ".jpg" && ext !== ".gif" && ext !== ".jpeg") {
+    return cb(new Error("Only images are allowed"));
+  }
+};
 
 // const fileSize = parseInt(req.headers['content-length']);
 //       if (fileSize > 1048576) {

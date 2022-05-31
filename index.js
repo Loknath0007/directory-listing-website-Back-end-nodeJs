@@ -21,7 +21,7 @@ connectDB();
 
 const multer = require("multer");
 
-var storage = multer.diskStorage({
+var fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads");
   },
@@ -29,14 +29,13 @@ var storage = multer.diskStorage({
     cb(null, file.fieldname + "-" + Date.now());
   },
 });
-
-const fileFilter = (req, file, cb) => {
-  // var ext = path.extname(file.originalname);
-  const ext = path.extname(file.originalname);
-  if (ext !== ".png" && ext !== ".jpg" && ext !== ".gif" && ext !== ".jpeg") {
-    return cb(new Error("Only images are allowed"));
-  }
-};
+// const fileFilter = (req, file, cb) => {
+//   // var ext = path.extname(file.originalname);
+//   const ext = path.extname(file.originalname);
+//   if (ext !== ".png" && ext !== ".jpg" && ext !== ".gif" && ext !== ".jpeg") {
+//     return cb(new Error("Only images are allowed"));
+//   }
+// };
 
 // const fileSize = parseInt(req.headers['content-length']);
 //       if (fileSize > 1048576) {
@@ -44,12 +43,10 @@ const fileFilter = (req, file, cb) => {
 //     }
 
 var upload = multer({
-  storage: storage,
-  limits: { fileSize: 200 * 1024 * 1024 },
+  storage: fileStorage,
+  // limits: { fileSize: 200 * 1024 * 1024 },
   // fileFilter:fileFilter
 });
-
-// const {upload} = require('./middlewares/products/fileUplaod')
 
 const path = require("path");
 const fs = require("fs");
@@ -99,12 +96,17 @@ app.use("/api/categories", categoryRouter);
 const locationRouter = require("./routes/locationRouter");
 app.use("/api/location", locationRouter);
 
+// User Routes
 const userRouter = require("./routes/userRoute");
 app.use("/users", userRouter);
 
 const fileUploadRouter = require("./routes/fileUploadRoute");
 app.use("/post", fileUploadRouter);
 // app.use('/',fileUploadRouter)
+
+// Images Upload routes
+const imagesRouter = require("./routes/imagesRoute");
+app.use("/upload", imagesRouter);
 
 // Error Handler
 app.use(errorHandler);

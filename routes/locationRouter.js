@@ -8,12 +8,16 @@ const {
   deleteLocation,
   deleteAllLocation,
 } = require("../controllers/locationController");
+const { isAuthenticatedUser, authorizeRoles } = require("../middlewares/auth");
 
 router
-  .route("/")
+  .route('/')
   .get(getLocations)
-  .post(createLocation)
-  .delete(deleteAllLocation);
-router.route("/:id").put(updateLocation).delete(deleteLocation);
+  .post(isAuthenticatedUser, authorizeRoles('admin'), createLocation)
+  .delete(isAuthenticatedUser, authorizeRoles('admin'), deleteAllLocation);
+router
+  .route('/:id')
+  .put(isAuthenticatedUser, authorizeRoles('admin'), updateLocation)
+  .delete(isAuthenticatedUser, authorizeRoles('admin'), deleteLocation);
 
 module.exports = router;

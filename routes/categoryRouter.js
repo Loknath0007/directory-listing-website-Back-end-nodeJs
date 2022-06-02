@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 
 const {
@@ -8,12 +8,16 @@ const {
   deleteCategory,
   deleteAllCategories,
 } = require('../controllers/cetegoryController');
+const { isAuthenticatedUser, authorizeRoles } = require('../middlewares/auth');
 
 router
   .route('/')
   .get(getCategories)
-  .post(createCategory)
-  .delete(deleteAllCategories);
-router.route('/:id').put(updateCategory).delete(deleteCategory);
+  .post(isAuthenticatedUser, authorizeRoles('admin'), createCategory)
+  .delete(isAuthenticatedUser, authorizeRoles('admin'), deleteAllCategories);
+router
+  .route('/:id')
+  .put(isAuthenticatedUser, authorizeRoles('admin'), updateCategory)
+  .delete(isAuthenticatedUser, authorizeRoles('admin'), deleteCategory);
 
 module.exports = router;

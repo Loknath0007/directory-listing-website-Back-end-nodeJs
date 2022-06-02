@@ -1,97 +1,115 @@
 const express = require('express');
+const asyncHandler = require('../middlewares/async');
 const Post = require('../model/Post');
 const User = require('../model/User');
-const ObjectId = require('mongodb').ObjectId;
 
-const getPost = async (req, res) => {
-  const posts = await Post.find().populate('user', 'username');
-  if (!posts) return res.status(201).json({ message: 'No post yet' });
-  res.status(201).json({ count: posts.length, posts });
-};
+// @Get all posts   GET /api/posts
+const getPosts = asyncHandler(async (req, res) => {
+  const posts = await Post.find().populate('user', 'name email');
 
-const createPost = async (req, res) => {
-  // if(!req?.body) return res.status(400).json({'message':'Noting to save '})
+  res.status(200).json({
+    success: true,
+    count: posts.length,
+    posts,
+  });
+});
 
-  // const newPost=new Post(req.body)
-  // await newPost.save((err)=>{
-  //     if(!err) {
-  //      res.status(201).json(newPost)
-  //     }
-  //     else{
-  //         res.status(400).json({
-  //             'message':"error"
-  //         })
-  //     }
-  // })
-  try {
-    const result = await Post.create({
-      ...req.body,
-      user: req.userId,
-    });
-    // console.log(result.timestamps.createdAt)
-    const updateUser = await User.updateOne(
-      {
-        _id: req.userId,
-      },
-      {
-        $push: {
-          posts: result._id,
-        },
-      }
+// @Get single post   GET /api/posts/:id
+const getPost = asyncHandler(async (req, res) => {
+  const post = await Post.findById(req.params.id).populate(
+    'user',
+    'name email'
+  );
+
+  if (!post) {
+    return next(
+      new ErrorResponse(`No post with the id of ${req.params.id}`, 404)
     );
-    res.status(201).json(result);
-  } catch (error) {
-    console.log(error);
-    res.send({
-      message: 'There is an error',
-    });
   }
-};
 
-const getSinglePost = async (req, res) => {
-  // if(!req?.body.id) return res.status(400).json({'message':'ID is required '})
+  res.status(200).json({
+    success: true,
+    data: post,
+  });
+});
 
-  const id = req.params.id;
+// @Create post   POST /api/posts
+const createPost = asyncHandler(async (req, res) => {
+  const post = await Post.create({
+    ...req.body,
+    // images: req.files.map((file) => file.path),
+    user: req.user.id,
+  });
 
-  const filter = { _id: ObjectId(id) };
-  const result = await Post.findOne(filter).exec();
-  res.json(result);
-};
-const updatePost = async (req, res) => {
-  const id = req.params.id;
-  if (!id) return res.status(400).json({ message: 'ID is required ' });
+  console.log(req.body);
+  res.status(201).json({
+    success: true,
+    data: post,
+  });
+});
 
-  const posts = req.body;
-  const filter = { _id: ObjectId(id) };
-
-  const updateDoc = {
-    $set: posts,
-  };
-  const options = {
+// @Update post   PUT /api/posts/:id
+const updatePost = asyncHandler(async (req, res, next) => {
+  const post = await Post.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
-  };
+    runValidators: true,
+  });
 
-  const result = await Post.findByIdAndUpdate(filter, updateDoc, options);
-  res.json(result);
-};
+  if (!post) {
+    return next(new ErrorResponse(`Post not found`, 404));
+  }
 
-const deletePost = async (req, res) => {
-  const id = req.params.id;
-  const query = { _id: ObjectId(id) };
-  const result = await Post.deleteOne(query);
-  res.json(result);
-};
+  res.status(200).json({
+    success: true,
+    isUpdated: true,
+    data: post,
+  });
+});
 
-const deleteAll = async (req, res) => {
-  const result = await Post.deleteMany();
-  res.status(200).json(result);
-};
+// @Delete post   DELETE /api/posts/:id
+const deletePost = asyncHandler(async (req, res, next) => {
+  const post = await Post.findByIdAndDelete(req.params.id);
+
+  if (!post) {
+    return next(new ErrorResponse(`Post not found`, 404));
+  }
+
+  res.status(200).json({
+    success: true,
+    isDeleted: true,
+  });
+});
+
+// @Delete all posts   DELETE /api/posts
+const deleteAllPosts = asyncHandler(async (req, res, next) => {
+  await Post.deleteMany();
+
+  res.status(200).json({
+    success: true,
+    isDeleted: true,
+  });
+});
+
+// @Get all posts by user   GET /api/posts/user/:id
+const getPostsByUser = asyncHandler(async (req, res) => {
+  const posts = await Post.find({ user: req.params.id }).populate(
+    'user',
+    'name email'
+  );
+
+  res.status(200).json({
+    success: true,
+    count: posts.length,
+    posts,
+  });
+});
 
 module.exports = {
+  getPosts,
   getPost,
   createPost,
-  getSinglePost,
   updatePost,
   deletePost,
-  deleteAll,
+  deleteAllPosts,
+  getPostsByUser,
 };

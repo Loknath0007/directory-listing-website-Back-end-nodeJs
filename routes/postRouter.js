@@ -10,12 +10,12 @@ const {
   getPostsByUser,
 } = require('../controllers/postController');
 const { isAuthenticatedUser, authorizeRoles } = require('../middlewares/auth');
-const { upload } = require('../middlewares/products/fileUplaod');
+const uploadFile = require('../middlewares/uploadFile');
 
 router
   .route('/')
   .get(getPosts)
-  .post(isAuthenticatedUser, upload.array('images', 5), createPost)
+  .post(isAuthenticatedUser, uploadFile.array('images', 5), createPost)
   .delete(isAuthenticatedUser, authorizeRoles('admin'), deleteAllPosts);
 
 router

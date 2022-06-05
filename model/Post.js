@@ -19,7 +19,7 @@ const postSchema = new Schema(
         type: String,
         required: [true, 'Category is required'],
       },
-      subcategories: [String],
+      subCategories: [String],
     },
     brand: {
       type: String,
@@ -67,7 +67,7 @@ const postSchema = new Schema(
     user: {
       type: mongoose.Types.ObjectId,
       ref: 'User',
-      required: [true, 'User is required'],
+      required: [false, 'User is required'],
     },
   },
   { timestamps: true }

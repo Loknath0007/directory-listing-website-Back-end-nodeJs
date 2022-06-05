@@ -1,20 +1,29 @@
 const express = require('express');
 const router = express.Router();
-const checkLogin = require('../middlewares/checkLogin');
 const {
+  getPosts,
   getPost,
   createPost,
   updatePost,
-  getSinglePost,
   deletePost,
-  deleteAll,
+  deleteAllPosts,
+  getPostsByUser,
 } = require('../controllers/postController');
+const { isAuthenticatedUser, authorizeRoles } = require('../middlewares/auth');
+const uploadFile = require('../middlewares/uploadFile');
 
-router.route('/').get(getPost).post(checkLogin, createPost);
+router
+  .route('/')
+  .get(getPosts)
+  .post(isAuthenticatedUser, uploadFile.array('images', 5), createPost)
+  .delete(isAuthenticatedUser, authorizeRoles('admin'), deleteAllPosts);
 
-router.route('/:id').get(getSinglePost).put(updatePost).delete(deletePost);
+router
+  .route('/:id')
+  .get(getPost)
+  .put(isAuthenticatedUser, updatePost)
+  .delete(isAuthenticatedUser, deletePost);
 
-// Delete all Post
-router.delete('/', deleteAll);
+router.route('/user/:id').get(getPostsByUser);
 
 module.exports = router;

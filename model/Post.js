@@ -5,53 +5,72 @@ const postSchema = new Schema(
   {
     title: {
       type: String,
-      required: true,
+      required: [true, "Title is required"],
+      trim: true,
+      maxlength: [100, "Title must be less than 100 characters"],
+    },
+    description: {
+      type: String,
+      required: [true, "Description is required"],
+      maxlength: [5000, "Description must be less than 5000 characters"],
+    },
+    category: {
+      category: {
+        type: String,
+        required: [true, "Category is required"],
+      },
+      subCategories: [String],
+    },
+    brand: {
+      type: String,
+      trim: true,
+    },
+    model: {
+      type: String,
+      trim: true,
     },
     price: {
-      type: Number,
-      required: true,
+      type: String,
+      required: [true, "Price is required"],
     },
     condition: {
       type: String,
-      required: true,
+      trim: true,
     },
-    category: [
+    priceType: {
+      type: String,
+      trim: true,
+    },
+    locations: [
       {
-        type: String,
-        required: true,
+        country: {
+          type: String,
+          required: [true, "Country is required"],
+        },
+        states: [
+          {
+            state: {
+              type: String,
+              required: [true, "State is required"],
+            },
+            cities: [String],
+          },
+        ],
       },
     ],
-    subCategory: [
+    images: [
       {
         type: String,
+        required: [true, "Image is required"],
       },
     ],
-    features: [
-      {
-        type: String,
-      },
-    ],
-    location: String,
-    description: String,
     user: {
       type: mongoose.Types.ObjectId,
       ref: "User",
+      required: [false, "User is required"],
     },
   },
   { timestamps: true }
 );
-
-// timestamps: {
-//     createdAt: {
-
-//         type: Date,
-//         default: Date.now
-//     }, // Use `created_at` to store the created date
-//     updatedAt:  {
-
-//         type: Date,
-//         default: Date.now
-//     }, // and `updated_at` to store the last updated date
-//   }
 
 module.exports = mongoose.model("Post", postSchema);

@@ -29,7 +29,7 @@ const getPost = asyncHandler(async (req, res) => {
 
   res.status(200).json({
     success: true,
-    data: post,
+    post,
   });
 });
 
@@ -39,12 +39,13 @@ const createPost = asyncHandler(async (req, res) => {
     ...req.body,
     images: req.files.map((file) => file.path),
     user: req.user.id,
+    category: JSON.parse(req.body.category),
+    locations: JSON.parse(req.body.locations),
   });
 
-  console.log(req.body);
   res.status(201).json({
     success: true,
-    data: post,
+    post,
   });
 });
 

@@ -5,7 +5,7 @@ const User = require('../model/User');
 
 // @Get all posts   GET /api/posts
 const getPosts = asyncHandler(async (req, res) => {
-  const posts = await Post.find().populate('user', 'name email');
+  const posts = await Post.find().populate('contactDetails.user', 'name email');
 
   res.status(200).json({
     success: true,
@@ -17,7 +17,7 @@ const getPosts = asyncHandler(async (req, res) => {
 // @Get single post   GET /api/posts/:id
 const getPost = asyncHandler(async (req, res) => {
   const post = await Post.findById(req.params.id).populate(
-    'user',
+    'contactDetails.user',
     'name email'
   );
 
@@ -35,12 +35,17 @@ const getPost = asyncHandler(async (req, res) => {
 
 // @Create post   POST /api/posts
 const createPost = asyncHandler(async (req, res) => {
+  console.log(req.body);
   const post = await Post.create({
     ...req.body,
     images: req.files.map((file) => file.path),
-    user: req.user.id,
     category: JSON.parse(req.body.category),
     locations: JSON.parse(req.body.locations),
+
+    contactDetails: {
+      user: req.user.id,
+      phone: JSON.parse(req.body.contactDetails).phone,
+    },
   });
 
   res.status(201).json({

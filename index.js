@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use(morgan('dev'));
-app.use('/assets', express.static(__dirname + 'assets'));
+app.use('/assets', express.static('assets'));
 
 // Database
 connectDB();

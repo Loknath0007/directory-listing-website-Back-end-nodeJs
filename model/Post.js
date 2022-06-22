@@ -64,10 +64,15 @@ const postSchema = new Schema(
         required: [true, "Image is required"],
       },
     ],
-    user: {
-      type: mongoose.Types.ObjectId,
-      ref: "User",
-      required: [false, "User is required"],
+    contactDetails: {
+      user: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: [true, "User is required"],
+      },
+      phone: {
+        type: String,
+      },
     },
   },
   { timestamps: true }

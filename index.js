@@ -17,9 +17,74 @@ app.use('/assets', express.static(__dirname + 'assets'));
 // Database
 connectDB();
 
-// Auth Routes
+const multer = require('multer');
+
+var fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads');
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.fieldname + '-' + Date.now());
+  },
+});
+const fileFilter = (req, file, cb) => {
+  // var ext = path.extname(file.originalname);
+  const ext = path.extname(file.originalname);
+  if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
+    return cb(new Error('Only images are allowed'));
+  }
+};
+
+// const fileSize = parseInt(req.headers['content-length']);
+//       if (fileSize > 1048576) {
+//         callback(new Error('Please upload file less then 10Mb'));
+//     }
+
+var upload = multer({
+  storage: fileStorage,
+  // limits: { fileSize: 200 * 1024 * 1024 },
+  // fileFilter:fileFilter
+});
+
+const path = require('path');
+const fs = require('fs');
+
+var imageModel = require('./model/Images');
+
+//multiple file problem
+app.post(
+  '/post/imageupload/:id',
+  upload.array('images', 6),
+  (req, res, next) => {
+    var obj = {
+      postId: req.params.id,
+      name: req.body.name,
+      desc: req.body.desc,
+      img: {
+        data: req.files.map((file) =>
+          fs.readFileSync(path.join(__dirname + '/uploads/' + file))
+        ),
+        // data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.files.map(filename=>filename=filename))),
+        contentType: 'image/*',
+      },
+    };
+    imageModel.create(obj, (err, item) => {
+      if (err) {
+        console.log(err);
+      } else {
+        // item.save();
+        res.send(item);
+      }
+    });
+    res.send('upload ok');
+  }
+);
+
+//Router
 const authRouter = require('./routes/authRouter');
 app.use('/api', authRouter);
+const postRouter = require('./routes/postRouter');
+app.use('/posts', postRouter);
 
 // Category Routes
 const categoryRouter = require('./routes/categoryRouter');

@@ -67,12 +67,13 @@ const postSchema = new Schema(
     contactDetails: {
       user: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: [true, 'User is required'],
+        ref: "User",
+        required: [true, "User is required"],
       },
       phone: {
         type: String,
       },
+    },
   },
   { timestamps: true }
 );

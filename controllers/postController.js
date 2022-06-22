@@ -1,11 +1,11 @@
-const express = require('express');
-const asyncHandler = require('../middlewares/async');
-const Post = require('../model/Post');
-const User = require('../model/User');
+const express = require("express");
+const asyncHandler = require("../middlewares/async");
+const Post = require("../model/Post");
+const User = require("../model/User");
 
 // @Get all posts   GET /api/posts
 const getPosts = asyncHandler(async (req, res) => {
-  const posts = await Post.find().populate('contactDetails.user', 'name email');
+  const posts = await Post.find().populate("contactDetails.user", "name email");
 
   res.status(200).json({
     success: true,
@@ -17,8 +17,8 @@ const getPosts = asyncHandler(async (req, res) => {
 // @Get single post   GET /api/posts/:id
 const getPost = asyncHandler(async (req, res) => {
   const post = await Post.findById(req.params.id).populate(
-    'contactDetails.user',
-    'name email'
+    "contactDetails.user",
+    "name email"
   );
 
   if (!post) {
@@ -99,8 +99,8 @@ const deleteAllPosts = asyncHandler(async (req, res, next) => {
 // @Get all posts by user   GET /api/posts/user/:id
 const getPostsByUser = asyncHandler(async (req, res) => {
   const posts = await Post.find({ user: req.params.id }).populate(
-    'user',
-    'name email'
+    "user",
+    "name email"
   );
 
   res.status(200).json({

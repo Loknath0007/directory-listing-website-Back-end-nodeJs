@@ -4,9 +4,10 @@ const ErrorResponse = require("../utils/errorResponse");
 const asyncHandler = require("./async");
 
 exports.isAuthenticatedUser = asyncHandler(async (req, res, next) => {
-  // const {token}= req.cookies
+  // const { token } = req.cookies;
   // load token
   const token = req.header("Authorization");
+  console.log(token);
 
   if (!token) return next(new ErrorResponse("Please login first.", 401));
 

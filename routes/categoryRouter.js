@@ -13,11 +13,11 @@ const { isAuthenticatedUser, authorizeRoles } = require("../middlewares/auth");
 router
   .route("/")
   .get(getCategories)
-  .post(isAuthenticatedUser, authorizeRoles("admin"), createCategory)
+  .post(isAuthenticatedUser, authorizeRoles("user"), createCategory)
   .delete(isAuthenticatedUser, authorizeRoles("admin"), deleteAllCategories);
 router
   .route("/:id")
-  .put(isAuthenticatedUser, authorizeRoles("admin"), updateCategory)
-  .delete(isAuthenticatedUser, authorizeRoles("admin"), deleteCategory);
+  .put(isAuthenticatedUser, updateCategory)
+  .delete(isAuthenticatedUser, authorizeRoles("user"), deleteCategory);
 
 module.exports = router;

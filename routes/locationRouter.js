@@ -13,11 +13,11 @@ const { isAuthenticatedUser, authorizeRoles } = require("../middlewares/auth");
 router
   .route("/")
   .get(getLocations)
-  .post(isAuthenticatedUser, authorizeRoles("admin"), createLocation)
-  .delete(isAuthenticatedUser, authorizeRoles("admin"), deleteAllLocation);
+  .post(isAuthenticatedUser, createLocation)
+  .delete(isAuthenticatedUser, deleteAllLocation);
 router
   .route("/:id")
-  .put(isAuthenticatedUser, authorizeRoles("admin"), updateLocation)
-  .delete(isAuthenticatedUser, authorizeRoles("admin"), deleteLocation);
+  .put(isAuthenticatedUser, updateLocation)
+  .delete(isAuthenticatedUser, deleteLocation);
 
 module.exports = router;

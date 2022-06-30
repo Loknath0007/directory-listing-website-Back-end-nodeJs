@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 const {
   getPosts,
@@ -8,22 +8,26 @@ const {
   deletePost,
   deleteAllPosts,
   getPostsByUser,
-} = require('../controllers/postController');
-const { isAuthenticatedUser, authorizeRoles } = require('../middlewares/auth');
-const uploadFile = require('../middlewares/uploadFile');
+} = require("../controllers/postController");
+const { isAuthenticatedUser, authorizeRoles } = require("../middlewares/auth");
+const uploadFile = require("../middlewares/uploadFile");
 
 router
-  .route('/')
+  .route("/")
   .get(getPosts)
-  .post(isAuthenticatedUser, uploadFile.array('images', 5), createPost)
-  .delete(isAuthenticatedUser, authorizeRoles('admin'), deleteAllPosts);
+  .post(isAuthenticatedUser, uploadFile.array("images", 5), createPost)
+  .delete(
+    isAuthenticatedUser,
+    authorizeRoles("admin" || "user"),
+    deleteAllPosts
+  );
 
 router
-  .route('/:id')
+  .route("/:id")
   .get(getPost)
   .put(isAuthenticatedUser, updatePost)
   .delete(isAuthenticatedUser, deletePost);
 
-router.route('/user/:id').get(getPostsByUser);
+router.route("/user/:id").get(getPostsByUser);
 
 module.exports = router;

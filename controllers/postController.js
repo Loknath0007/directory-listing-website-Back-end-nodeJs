@@ -35,7 +35,8 @@ const getPost = asyncHandler(async (req, res) => {
 
 // @Create post   POST /api/posts
 const createPost = asyncHandler(async (req, res) => {
-  console.log(req.body);
+  console.log("Create post", req.body, req.files);
+
   const post = await Post.create({
     ...req.body,
     images: req.files.map((file) => file.path),

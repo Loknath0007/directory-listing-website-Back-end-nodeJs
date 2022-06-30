@@ -9,15 +9,20 @@ const {
   deleteAllCategories,
 } = require("../controllers/cetegoryController");
 const { isAuthenticatedUser, authorizeRoles } = require("../middlewares/auth");
+const uploadFile = require("../middlewares/uploadFile");
 
 router
   .route("/")
   .get(getCategories)
-  .post(isAuthenticatedUser, authorizeRoles("user"), createCategory)
+  .post(
+    uploadFile.array("icon", 1),
+
+    createCategory
+  )
   .delete(isAuthenticatedUser, authorizeRoles("admin"), deleteAllCategories);
 router
   .route("/:id")
-  .put(isAuthenticatedUser, updateCategory)
-  .delete(isAuthenticatedUser, authorizeRoles("user"), deleteCategory);
+  .put(isAuthenticatedUser, authorizeRoles("admin"), updateCategory)
+  .delete(isAuthenticatedUser, authorizeRoles("admin"), deleteCategory);
 
 module.exports = router;

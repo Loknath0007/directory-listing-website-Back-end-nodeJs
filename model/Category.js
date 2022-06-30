@@ -10,6 +10,12 @@ const categorySchema = new Schema(
       require: true,
     },
     subCategories: [String],
+    icon: [
+      {
+        type: String,
+        required: [true, "Image Icon is required"],
+      },
+    ],
   },
   { timestamps: true }
 );

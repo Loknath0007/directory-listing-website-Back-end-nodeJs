@@ -1,6 +1,6 @@
-const Category = require('../model/Category');
-const asyncHandler = require('../middlewares/async');
-const ErrorResponse = require('../utils/errorResponse');
+const Category = require("../model/Category");
+const asyncHandler = require("../middlewares/async");
+const ErrorResponse = require("../utils/errorResponse");
 
 // @Get Categories   GET /api/categories
 const getCategories = asyncHandler(async (req, res, next) => {
@@ -15,8 +15,11 @@ const getCategories = asyncHandler(async (req, res, next) => {
 
 // @Post Categories   POST /api/categories
 const createCategory = asyncHandler(async (req, res) => {
-  const category = await Category.create(req.body);
-
+  const category = await Category.create({
+    ...req.body,
+    icon: req.files.map((file) => file.path),
+  });
+  console.log("Category created", category, req.files);
   res.status(201).json({
     success: true,
     data: category,

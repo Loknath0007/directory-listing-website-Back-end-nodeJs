@@ -1,9 +1,9 @@
-const multer = require('multer');
-const path = require('path');
-const ErrorResponse = require('../utils/errorResponse');
+const multer = require("multer");
+const path = require("path");
+const ErrorResponse = require("../utils/errorResponse");
 
 // Create Upload Folder
-const uploadFolder = './assets';
+const uploadFolder = "./assets";
 
 // Define The Storage
 const storage = multer.diskStorage({
@@ -11,14 +11,15 @@ const storage = multer.diskStorage({
     cb(null, uploadFolder);
   },
   filename: (req, file, cb) => {
+    console.log("fileExt    is " + file);
     const fileExt = path.extname(file.originalname);
     const fileName =
       file.originalname
-        .replace(fileExt, '')
+        .replace(fileExt, "")
         .toLowerCase()
-        .split(' ')
-        .join('-') +
-      '-' +
+        .split(" ")
+        .join("-") +
+      "-" +
       Date.now();
 
     cb(null, fileName + fileExt);
@@ -32,13 +33,13 @@ const uploadFile = multer({
   },
   fileFilter: (req, file, cb) => {
     if (
-      file.mimetype === 'image/png' ||
-      file.mimetype === 'image/jpg' ||
-      file.mimetype === 'image/jpeg'
+      file.mimetype === "image/png" ||
+      file.mimetype === "image/jpg" ||
+      file.mimetype === "image/jpeg"
     ) {
       cb(null, true);
     } else {
-      cb(new ErrorResponse('Only .jpg, .png or .jpeg format allowed!', 400));
+      cb(new ErrorResponse("Only .jpg, .png or .jpeg format allowed!", 400));
     }
   },
 });

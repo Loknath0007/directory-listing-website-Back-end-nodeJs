@@ -2,10 +2,18 @@ const express = require("express");
 const asyncHandler = require("../middlewares/async");
 const Post = require("../model/Post");
 const User = require("../model/User");
+const APIFeatures = require("../utils/apiFeatures");
+
 
 // @Get all posts   GET /api/posts
 const getPosts = asyncHandler(async (req, res) => {
-  const posts = await Post.find().populate("contactDetails.user", "name email");
+  console.log("aksjflkaj")
+const apiFeatures = new APIFeatures(Post.find(),req.query)
+  .search()
+
+  // const posts = await Post.find().populate("contactDetails.user", "name email");
+
+  const posts = await apiFeatures.query;
 
   res.status(200).json({
     success: true,

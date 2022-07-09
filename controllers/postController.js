@@ -1,17 +1,14 @@
-const express = require("express");
-const asyncHandler = require("../middlewares/async");
-const Post = require("../model/Post");
-const User = require("../model/User");
-const APIFeatures = require("../utils/apiFeatures");
-
+const express = require('express');
+const asyncHandler = require('../middlewares/async');
+const Post = require('../model/Post');
+const User = require('../model/User');
+const APIFeatures = require('../utils/apiFeatures');
 
 // @Get all posts   GET /api/posts
 const getPosts = asyncHandler(async (req, res) => {
-  console.log("aksjflkaj")
-const apiFeatures = new APIFeatures(Post.find(),req.query)
-  .search()
+  const apiFeatures = new APIFeatures(Post.find(), req.query).filter();
 
-  // const posts = await Post.find().populate("contactDetails.user", "name email");
+  // const posts = await Po   st.find().populate("contactDetails.user", "name email");
 
   const posts = await apiFeatures.query;
 
@@ -25,8 +22,8 @@ const apiFeatures = new APIFeatures(Post.find(),req.query)
 // @Get single post   GET /api/posts/:id
 const getPost = asyncHandler(async (req, res) => {
   const post = await Post.findById(req.params.id).populate(
-    "contactDetails.user",
-    "name email"
+    'contactDetails.user',
+    'name email'
   );
 
   if (!post) {
@@ -43,7 +40,7 @@ const getPost = asyncHandler(async (req, res) => {
 
 // @Create post   POST /api/posts
 const createPost = asyncHandler(async (req, res) => {
-  console.log("Create post", req.body, req.files);
+  console.log('Create post', req.body, req.files);
 
   const post = await Post.create({
     ...req.body,
@@ -108,8 +105,8 @@ const deleteAllPosts = asyncHandler(async (req, res, next) => {
 // @Get all posts by user   GET /api/posts/user/:id
 const getPostsByUser = asyncHandler(async (req, res) => {
   const posts = await Post.find({ user: req.params.id }).populate(
-    "user",
-    "name email"
+    'user',
+    'name email'
   );
 
   res.status(200).json({

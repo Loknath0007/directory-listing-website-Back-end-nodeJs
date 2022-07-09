@@ -1,23 +1,23 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const postSchema = new Schema(
   {
     title: {
       type: String,
-      required: [true, "Title is required"],
+      required: [true, 'Title is required'],
       trim: true,
-      maxlength: [100, "Title must be less than 100 characters"],
+      maxlength: [100, 'Title must be less than 100 characters'],
     },
     description: {
       type: String,
-      required: [true, "Description is required"],
-      maxlength: [5000, "Description must be less than 5000 characters"],
+      required: [true, 'Description is required'],
+      maxlength: [5000, 'Description must be less than 5000 characters'],
     },
     category: {
       category: {
         type: String,
-        required: [true, "Category is required"],
+        required: [true, 'Category is required'],
       },
       subCategories: [String],
     },
@@ -30,8 +30,8 @@ const postSchema = new Schema(
       trim: true,
     },
     price: {
-      type: String,
-      required: [true, "Price is required"],
+      type: Number,
+      required: [true, 'Price is required'],
     },
     condition: {
       type: String,
@@ -45,13 +45,13 @@ const postSchema = new Schema(
       {
         country: {
           type: String,
-          required: [true, "Country is required"],
+          required: [true, 'Country is required'],
         },
         states: [
           {
             state: {
               type: String,
-              required: [true, "State is required"],
+              required: [true, 'State is required'],
             },
             cities: [String],
           },
@@ -61,14 +61,14 @@ const postSchema = new Schema(
     images: [
       {
         type: String,
-        required: [true, "Image is required"],
+        required: [true, 'Image is required'],
       },
     ],
     contactDetails: {
       user: {
         type: Schema.Types.ObjectId,
-        ref: "User",
-        required: [true, "User is required"],
+        ref: 'User',
+        required: [true, 'User is required'],
       },
       phone: {
         type: String,
@@ -78,4 +78,4 @@ const postSchema = new Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Post", postSchema);
+module.exports = mongoose.model('Post', postSchema);

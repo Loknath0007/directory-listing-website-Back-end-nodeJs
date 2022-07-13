@@ -14,9 +14,8 @@ const uploadFile = require("../middlewares/uploadFile");
 router
   .route("/")
   .get(getCategories)
-  .post(
+  .post(isAuthenticatedUser, authorizeRoles("admin"), 
     uploadFile.array("icon", 1),
-
     createCategory
   )
   .delete(isAuthenticatedUser, authorizeRoles("admin"), deleteAllCategories);

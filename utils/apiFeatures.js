@@ -1,5 +1,3 @@
-const { Db } = require('mongodb');
-const checkLogin = require('../middlewares/checkLogin');
 
 class APIFeatures {
   constructor(query, queryStr) {
@@ -24,30 +22,45 @@ class APIFeatures {
 
   filter() {
     const filteredPosts = this.filteredPosts;
-    // const price = {price:{$gt:100, $lt:1000}}
     console.log('filteredPosts', filteredPosts);
-    // this.query = this.query.find({
-    //   $or: [{ brand: 'Toyota' }, { price: { $gt: 100, $lt: 1000 } }],
-    // });
+    
     const { price, category, country, state } = filteredPosts;
-    console.log('CATEGORY: ' + country);
-    this.query = this.query.find({
-      price: { $gt: price[0], $lt: price[1] },
-      'category.category': category,
-      locations: {
-        $elemMatch: {
-          country,
-          states: { $elemMatch: { state } },
-        },
-      },
 
-      // $and: [
-      //   { category: filteredPosts.category },
-      //   { price: { $gt: price[0], $lt: price[1] } },
-      // { country: country || 'all' },
-      // { state: state || 'all' },
-      // ],
-    });
+    var findQuery= {} ;
+
+      if(price)
+         findQuery.price= { $gt: price[0], $lt: price[1] }   
+         
+      if(category)
+         findQuery["category.category"]=  category 
+     
+      if(country && state)
+         findQuery.locations= {
+              $elemMatch: {
+               country,
+                states:  state ? { $elemMatch: { state } } : { $elemMatch: {  } }
+               }
+            } 
+     else if(country)
+         findQuery.locations= {
+              $elemMatch: {
+                country
+               }
+            } 
+     else if(state)
+         findQuery.locations= {
+              $elemMatch: {              
+                states:  state ? { $elemMatch: { state } } : { $elemMatch: {  } }
+               }
+            } 
+              
+    
+   
+    console.log('CATEGORY: ' + price + category + country + state)
+    
+    console.log("findquery", findQuery)
+   
+    this.query = this.query.find({...findQuery})
     return this;
   }
 }

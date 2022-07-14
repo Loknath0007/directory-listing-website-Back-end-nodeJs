@@ -24,7 +24,7 @@ class APIFeatures {
     const filteredPosts = this.filteredPosts;
     console.log('filteredPosts', filteredPosts);
     
-    const { price, category, country, state } = filteredPosts;
+    const { price, category, country, state, sortBy } = filteredPosts;
 
     var findQuery= {} ;
 
@@ -61,6 +61,26 @@ class APIFeatures {
     console.log("findquery", findQuery)
    
     this.query = this.query.find({...findQuery})
+
+  //   var sortedPosts
+  //   if(sortBy){
+  //     sortedPosts = [...this.query];
+  //    if (sortBy === 'newest') {
+  //      sortedPosts.sort((a, b) => {
+  //        return moment(b.createdAt).diff(moment(a.createdAt));
+  //      });
+  //    } else if (sortBy === 'oldest') {
+  //      sortedPosts.sort((a, b) => {
+  //        return moment(a.createdAt).diff(moment(b.createdAt));
+  //      });
+  //    } else if (sortBy === 'lowest') {
+  //      sortedPosts.sort((a, b) => a.price - b.price);
+  //    } else if (sortBy === 'highest') {
+  //      sortedPosts.sort((a, b) => b.price - a.price);
+  //    }
+  //  }
+    
+  //  console.log("sortedPosts", + sortedPosts)
     return this;
   }
 }

@@ -7,15 +7,39 @@ const APIFeatures = require('../utils/apiFeatures');
 // @Get all posts   GET /api/posts
 const getPosts = asyncHandler(async (req, res) => {
   const apiFeatures = new APIFeatures(Post.find(), req.query).filter();
+const {sortBy}=JSON.parse( req.query.filteredPosts)
 
   // const posts = await Po   st.find().populate("contactDetails.user", "name email");
 
   const posts = await apiFeatures.query;
 
+  var sortedPosts 
+console.log("sortBy",sortBy,req.query)
+  ///sort by
+  if( sortBy){
+     sortedPosts = await [...posts];
+    if (sortBy === 'newest') {
+      sortedPosts.sort((a, b) => {
+        return moment(b.createdAt).diff(moment(a.createdAt));
+      });
+    } else if (sortBy === 'oldest') {
+      sortedPosts.sort((a, b) => {
+        return moment(a.createdAt).diff(moment(b.createdAt));
+      });
+    } else if (sortBy === 'lowest') {
+      sortedPosts.sort((a, b) => a.price - b.price);
+    } else if (sortBy === 'highest') {
+      sortedPosts.sort((a, b) => b.price - a.price);
+    }
+     
+  }
+  
+console.log("sortedPosts",  sortedPosts)
+
   res.status(200).json({
     success: true,
     count: posts.length,
-    posts,
+    posts: sortBy ? sortedPosts : posts
   });
 });
 

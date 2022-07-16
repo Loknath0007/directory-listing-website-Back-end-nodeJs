@@ -6,7 +6,7 @@ const APIFeatures = require('../utils/apiFeatures');
 
 // @Get all posts   GET /api/posts
 const getPosts = asyncHandler(async (req, res) => {
-  const apiFeatures = new APIFeatures(Post.find(), req.query).filter();
+  const apiFeatures = new APIFeatures(Post.find(), req.query).search().filter();
 const {sortBy}=JSON.parse( req.query.filteredPosts)
 
   // const posts = await Po   st.find().populate("contactDetails.user", "name email");
@@ -34,7 +34,7 @@ console.log("sortBy",sortBy,req.query)
      
   }
   
-console.log("sortedPosts",  sortedPosts)
+console.log("sortedPosts",  sortedPosts,posts)
 
   res.status(200).json({
     success: true,

@@ -5,12 +5,11 @@ class APIFeatures {
     this.queryStr = queryStr;
     this.filteredPosts = JSON.parse(queryStr.filteredPosts);
   }
-
   search() {
-    const postTitle = this.queryStr.title
+    const postTitle = this.filteredPosts.title
       ? {
           title: {
-            $regex: this.queryStr.title,
+            $regex: this.filteredPosts.title,
             $options: 'i',
           },
         }

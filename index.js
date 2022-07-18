@@ -96,6 +96,10 @@ app.use('/api/location', locationRouter);
 const postRouter = require('./routes/postRouter');
 app.use('/api/posts', postRouter);
 
+// Settings Routes
+const settingRouter = require('./routes/settingRouter');
+app.use('/api/setting', settingRouter);
+
 // User Routes
 const userRouter = require('./routes/userRoute');
 app.use('/users', userRouter);

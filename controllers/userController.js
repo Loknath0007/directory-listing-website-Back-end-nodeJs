@@ -1,35 +1,36 @@
-const express =require('express');
+const express = require('express');
 const User = require('../model/User');
 const ObjectId = require('mongodb').ObjectId
 const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const asyncHandler = require('../middlewares/async');
 
 
 
 
 
-const getData= async (req,res)=>{
+const getData = async (req, res) => {
 
-    
+
     const cursor = await User.find().populate('posts');
-    if(!cursor) return res.status(200).json({'message':'No post yet'})
+    if (!cursor) return res.status(200).json({ 'message': 'No post yet' })
     res.status(200).json(cursor)
-     
+
 }
 
 
 // user creation or signup 
-const create= async (req,res)=>{
+const create = async (req, res) => {
 
-        const hashPass= await bcrypt.hash(req.body.password,10)
-        const data =req.body
+    const hashPass = await bcrypt.hash(req.body.password, 10)
+    const data = req.body
     try {
         const result = await User.create({
             ...data,
             password: hashPass
         })
         res.status(201).json(result)
-        
+
     } catch (error) {
         console.log(error);
     }
@@ -39,46 +40,47 @@ const create= async (req,res)=>{
 
 
 
-const getSingleData=async(req,res)=>{
+const getSingleData = async (req, res) => {
 
     // if(!req?.body.id) return res.status(400).json({'message':'ID is required '})
 
     const id = req.params.id;
-   
-    const filter = {_id: ObjectId(id)}
+
+    const filter = { _id: ObjectId(id) }
     const result = await User.findOne(filter).exec()
-     res.json(result);
+    res.json(result);
 
 }
-const update=async(req,res)=>{
+const update = asyncHandler(async (req, res) => {
 
     const id = req.params.id;
-    if(!id) return res.status(400).json({'message':'ID is required '})
+    if (!id) return res.status(400).json({ 'message': 'ID is required ' })
 
+    console.log("posts", req.body)
     const posts = req.body;
-    const filter = {_id: ObjectId(id)}
-  
+    const filter = { _id: ObjectId(id) }
+
     const updateDoc = {
         $set: posts
-         
-     };
-     const options={
-         new: true
-     }
 
-     const result = await User.findByIdAndUpdate(filter, updateDoc,options);
-     res.json(result);
+    };
+    const options = {
+        new: true
+    }
+
+    const result = await User.findByIdAndUpdate(filter, updateDoc, options);
+    res.json(result);
 
 
-  
 
-}
 
-const deleteData=async(req,res)=>{
-    const id= req.params.id;
-        const query ={_id: ObjectId(id)};
-        const result = await User.deleteOne(query);
-        res.json(result);
+})
+
+const deleteData = async (req, res) => {
+    const id = req.params.id;
+    const query = { _id: ObjectId(id) };
+    const result = await User.deleteOne(query);
+    res.json(result);
 
 }
 
@@ -90,7 +92,7 @@ const deleteData=async(req,res)=>{
 
 //         const user = await User.find({username: req.body.username})
 //         if(user){
-    
+
 //             const isValid = await bcrypt.compare(req.body.password,user[0].password)
 //             if(isValid){
 //                 //generate token
@@ -100,12 +102,12 @@ const deleteData=async(req,res)=>{
 //                 },process.env.JWT_SECRET,{
 //                     expiresIn: '24h'
 //                 })
-    
+
 //                 res.status(200).json({
 //                     'access_token': token,
 //                     'message': 'Login successful'
 //                 })
-    
+
 //             }
 //             else{
 //                 res.status(401).json({
@@ -118,23 +120,23 @@ const deleteData=async(req,res)=>{
 //                 'message':'Authentication Failed'
 //             })
 //         }
-        
+
 //     } catch (error) {
 
 //         res.status(401).json({
 //             'message':'Authentication Failed'
 //         })
-        
+
 //     }
- 
+
 // }
 
 
-module.exports={
+module.exports = {
     getData,
     create,
     getSingleData,
     update,
     deleteData,
-    
+
 }

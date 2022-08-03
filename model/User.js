@@ -30,6 +30,36 @@ const userSchema = new Schema(
       type: String,
       trim: true,
     },
+    address: {
+      type: String,
+      trim: true,
+    },
+    country: {
+      type: String,
+      trim: true,
+    },
+    state: {
+      type: String,
+      trim: true,
+    },
+    zipCode: {
+      type: String,
+      trim: true,
+    },
+    currency: {
+      type: String,
+      trim: true,
+    },
+    images: [
+      {
+        type: String,
+        trim: true,
+      },
+    ],
+    language: {
+      type: String,
+      trim: true,
+    },
     role: {
       type: String,
       default: "user",

@@ -34,12 +34,24 @@ console.log("sortBy",sortBy,req.query)
      
   }
   
+  // today posts
+  var start = new Date();
+start.setHours(0,0,0,0);
+
+var end = new Date();
+end.setHours(23,59,59,999);
+
+console.log("data:", start, end)
+const todayPosts  = await Post.find({createdAt: {$gte: start, $lt: end}});
+
+console.log("todayPosts: ", todayPosts.length)
 console.log("sortedPosts",  sortedPosts,posts)
 
   res.status(200).json({
     success: true,
     count: posts.length,
-    posts: sortBy ? sortedPosts : posts
+    posts: sortBy ? sortedPosts : posts,
+    todayPosts
   });
 });
 
